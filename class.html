@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Page Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <script src="main.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    // function Person(name, age){
+    //   this.name = name;
+    //   this.age = age;
+    // }
+    // Person.prototype.say = function(){
+    //   console.log('我会说会啊');
+    // }
+
+    class Person{
+      constructor(name, age){
+        this.name = name;
+        this.age = age;
+      }
+      // static a = 1;//报错，静态属性不可以直接在class中定义。
+      //静态方法，通过类来调用
+      static isHuman(obj){
+        // console.log('isHuman');
+        return obj instanceof Person ;
+      }
+      //定义在class中的方法是不可枚举的。是通过实例来调用的。
+      say(){
+        console.log('我叫' + this.name + ', 今年' + this.age + '岁');
+      }
+      eat(){
+        console.log('eat.....');
+      }
+    }
+    var p1 = new Person('kimmo', 34);
+    console.log(Person.prototype); // {constructor: ƒ, say: ƒ}说明say方法是加在prototype上的。
+    console.log(Object.keys(Person.prototype)); //[]返回空数组，因为原型上的方法是不可枚举的。
+    p1.say();
+    p1.eat();
+    // p1.isHuman(); // 报错
+    console.log(Person.isHuman(p1)); 
+    console.log(Person.isHuman(1)); 
+    //定义静态属性
+    Person.staticProps = 'hello';
+    Person.staticVar = 'hi';
+    console.log(Person.staticProps);
+    console.log(Person.staticVar);
+    /*
+    类的继承
+    如果写了constructor，一定要调用super()，并且要传入父类构造函数需要的参数。
+    */
+    class Coder extends Person{
+      constructor(name, age,money){
+        super(name, age);//执行父类的构造函数
+        this.money = money; //子类特有的
+      }
+      //子类重写父类的方法,父类的方法并没有被修改
+      say(){
+        console.log('我叫' + this.name + ', 今年' + this.age + '岁'+ ',一月的薪水是'+ this.money+'元。');
+      }
+    }
+    var c1 = new Coder('wanger', 20, 30000);
+    c1.say();
+    console.log(c1);
+    console.log(Coder.isHuman(c1));//true 子类也可使用父类的静态方法。
+
+
+
+    // var str = '秒';
+    // //charCodeAt 方法的调用时通过实例（字符串）
+    // console.log(str.charCodeAt(0)); // 31186获得该字符的编码
+    // //fromCharCode 方法的调用时通过构造函数（String）这种方法称为静态方法
+    // console.log(String.fromCharCode(31186)); //秒
+    
+
+  </script>
+</body>
+</html>
