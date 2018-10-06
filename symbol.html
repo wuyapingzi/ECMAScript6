@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Page Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+        <script src="main.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+        /*
+        用Symbol生成的变量是独一无二的，虽然看着输出的结果是一样的，
+        但是，变量的实际存储位置是不一样的。
+        */
+        var s1 = Symbol();
+        var s2 = Symbol();
+        console.log(s1, s2);//Symbol() Symbol()
+        console.log(s1 === s2); // false
+
+        /*
+        为了让两个Symbol 生成的值看起来不一样，可以为Symbol设置标志
+        括号中的字符只是一个标志，没有其他的作用。
+        Symbol不能使用new关键字。
+        */
+        var s3 = Symbol('a');
+        var s4 = Symbol('b');
+        console.log(s3, s4);// Symbol(a) Symbol(b)
+
+        /*
+        可以用在对象中，避免对象键名的重复
+        */
+        var obj = {
+            a: 1,
+        }
+        obj.b = 2;
+        obj.a = 3;
+        // obj中a的值被覆盖
+        console.log(obj);// {a: 3, b: 2}
+        var a = Symbol('a');
+        obj[a] = 4;
+        console.log(obj); // {a: 3, b: 2, Symbol(a): 4}
+        //访问的时候使用obj[a]
+        console.log(obj[a]); // 4
+
+        /*
+        使用for in 遍历对象的时候，使用Symbol作为键名的属性并不会被遍历到
+        */
+        console.log(obj); //{a: 3, b: 2, Symbol(a): 4}
+        for(var item in obj){
+            console.log(item, obj[item]);
+            // a 3
+            // b 2
+        }
+
+        /*
+        使用 Object.getOwnPropertySymbols() 取到Symbol键名的值
+        */
+        console.log(Object.getOwnPropertySymbols(obj)); //[Symbol(a)]
+        
+        /*
+        Symbol类型不可进行运算，可以转成布尔值
+        */
+        var ss = Symbol('ss');
+        // console.log(ss + 1); // TypeError: Cannot convert a Symbol value to a number
+        // console.log(ss + 'aa'); // TypeError: Cannot convert a Symbol value to a string
+        console.log(Boolean(ss)); // true
+        </script>
+    </body>
+</html>
