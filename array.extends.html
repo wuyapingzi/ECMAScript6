@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        数组的创建
+        新增： 静态方法：Array.of()
+        */
+        var arr = new Array(10,20,30);
+        console.log(arr); // (3) [10, 20, 30]
+        var arr = new Array(10);
+        console.log(arr); // (10) [empty × 10] 创建的是10个长度的空数组
+        
+        //使用静态方法：Array.of()
+        var arr = Array.of(10,20,30);
+        console.log(arr); // (3) [10, 20, 30]
+        var arr = Array.of(10);
+        console.log(arr); // [10] 创建的是1个长度其值为10的数字
+
+        /*
+        判断是不是数组
+        新增：静态方法 Array.isArray(),返回布尔值
+        */
+        console.log(Array.isArray(arr));// true
+
+        var els = document.all; // 是类数组
+        console.log(els);// HTMLAllCollection(8) [html, head, meta, meta, meta, title, body, script, viewport: meta]
+        console.log(Array.isArray(els));// false
+        
+        /*
+        将类数组转成数组
+        新增： 静态方法：Array.from()，不会修改原数组
+        */
+        var arrEls = Array.from(els);
+        console.log(arrEls);// (8) [html, head, meta, meta, meta, title, body, script]
+        console.log(Array.isArray(els));// false
+        console.log(Array.isArray(arrEls)); // true      
+
+        /*
+        查找数组中首个符合规则的元素,或者元素下标
+        新增：实例方法arr.find() 未找到返回undefined
+        arr.findIndex() 未找到返回-1
+        */
+        var arr = [10,20,60,40,50,60];
+        var res = arr.find(function(item){
+            console.log(item);// 10 20 60 
+            return item > 50;
+        })
+        console.log(res); // 60
+
+        var res = arr.findIndex(function(item){
+            console.log(item); // 10 20 60
+            return item > 50;
+        });
+        console.log(res); // 2
+    </script>
+</body>
+</html>
