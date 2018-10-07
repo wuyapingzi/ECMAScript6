@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    /*
+    字符串查找,es6新增方法：includes，存在返回true，不存在返回false
+    旧方法：正则、indexOf
+    */
+    var str = 'hello wuyapingzi';
+    //indexOf() 从字符串起始位置开始查找，返回要查找字符的下标，如果没有找到，则返回-1
+    console.log(str.indexOf('zi')); // 14
+    // 通过返回的下标是不是等于-1来判断要找的字符（串）是不是在被查找的字符串中
+    console.log(str.indexOf('zi') !== -1); // true
+    console.log(str.includes('zi')); // true
+
+    /*
+    判断字符串是不是以某个字符串开头(结尾)，startsWith endsWith返回布尔值
+    */
+    console.log(str.startsWith('he')); // true
+    console.log(str.endsWith('zi')); // true
+
+    /*
+    重复字符串repeat(2)，参数是重复的次数，该方法不改变原来的字符串
+    */
+    var str1 = 'hi,wuyapingzi. ';
+    console.log(str1.repeat(3)); // hi,wuyapingzi. hi,wuyapingzi. hi,wuyapingzi. 
+    console.log(str1); // hi,wuyapingzi. 
+
+    /*
+    超级字符串，反引号`
+    应用场景：当定义的字符串需要换行的时候
+    超级字符串中使用变量：${}，花括号里面的内容是表达式或者是函数执行，而不是语句
+    */
+    var html = '<ul><li></li><li></li><li></li><li></li></ul>';//常规方式这样写视觉上没有体现出标签的嵌套层级
+    console.log(html); // <ul><li></li><li></li><li></li><li></li></ul>
+    var classStr = 'yellow'
+    var html = `
+    <ul>
+        <li class='red'></li>
+        <li class='green'></li>
+        <li class='${classStr}'></li>
+    </ul>
+    `
+    console.log(html);
+    /* 输出
+    <ul>
+        <li class='red'></li>
+        <li class='green'></li>
+        <li class='yellow'></li>
+    </ul>
+    */
+    var n = 2;
+    var m = 3;
+    console.log(`m+n=${m+n}`);// m+n=5
+
+    //三元运算符
+    var isRainning = true;
+    console.log(`今天的天气是${isRainning ? '雨天' : '晴天'}`);// 今天的天气是雨天
+
+    //拼接函数执行的结果
+    function fun(){
+        return '今天天气真好';
+    }
+    console.log(`fun函数执行的结果是:${fun()}`); // fun函数执行的结果是:今天天气真好
+
+
+
+
+
+    </script>
+</body>
+</html>
