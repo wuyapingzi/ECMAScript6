@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*
+        对象的键名是变量: []
+        */
+        var attrName = 'width';
+        var attrFn = 'fn';
+        var attrObj = {};
+        var obj = {
+            [attrName]: 100,
+            [attrObj]: 'hello',
+            [attrFn](){
+                console.log('hello , wuyapingzi');
+            }
+        }
+        console.log(obj); // {width: 100, [object Object]: "hello", fn: ƒ}
+        obj[attrFn](); // hello , wuyapingzi
+        console.log(obj[attrObj]); // hello
+//----------------------------------------------------
+        /*
+        判断是不是相等，新增：静态方法：Object.is()
+        */
+        console.log(Object.is(1,1)); // true
+        console.log(Object.is(1,'1')); // false
+        console.log(NaN === NaN); // false
+        console.log(NaN == NaN); // false
+        console.log(Object.is(NaN, NaN)); // true
+        console.log(Object.is({},{})); // false
+        var obj = {};
+        console.log(Object.is(obj, obj)); // true
+//------------------------------------------------------
+        /*
+        对象的合并
+        新增：静态方法： Object.assign(目标对象，源对象，源对象...),将源对象合并到目标对象中，目标对象被修改
+        后面的源对象会把目标对象中相同的属性覆盖     
+        */
+        function move(obj){
+            var defaultObj = {
+                ease: 'linear',
+                duration: 1000,
+            }
+            Object.assign(obj, defaultObj);
+            console.log(obj);
+        }
+        move({
+            ease: 'easeIn',
+            duration: 2000,
+        }); // {ease: "linear", duration: 1000} 目标对象被修改
+//------------------------------------------------------------
+        function move1(obj){
+            var defaultObj = {
+                ease: 'linear',
+                duration: 1000,
+            }
+            var para = Object.assign({}, obj, defaultObj);
+            console.log(obj); // {ease: "easeIn", duration: 2000}
+            console.log(para); // {ease: "linear", duration: 1000}
+        }
+        move1({
+            ease: 'easeIn',
+            duration: 2000,
+        }); 
+    </script>
+</body>
+</html>
