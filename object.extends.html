@@ -9,6 +9,7 @@
 <body>
     <script>
         /*
+        属性名表达式
         对象的键名是变量: []
         */
         var attrName = 'width';
@@ -24,6 +25,38 @@
         console.log(obj); // {width: 100, [object Object]: "hello", fn: ƒ}
         obj[attrFn](); // hello , wuyapingzi
         console.log(obj[attrObj]); // hello
+//------------------------------------------------------
+        /*
+        简写方法适用于模块输出一组变量
+        */
+        function getPosition(){
+            var x = 1;
+            var y = 2;
+            return {x, y};
+        }
+        console.log(getPosition()); // {x: 1, y: 2}
+        //-----CommonJs模块化输出-------------
+        let myObj = {};
+        function getItem(key){
+            return key in myObj? myObj[key]: null;
+        }
+        function setItem(key, val){
+            myObj[key] = val;
+        }
+        function clear(){
+            myObj = {};
+        }
+        exports = {getItem, setItem, clear}; // 模块化输出
+//---------------------------------------------------------
+        /*
+        属性名表达式与简洁表示法不能同时使用
+        注意：如果属性名表达式是一个对象，默认情况下会自动将对象转成字符串[object object]
+        */
+        var strM = 'm';
+        var strN = 'n';
+        // var strObj = {[strN]};//会报错
+        var strObj = {[strN]: 'm'};
+        console.log(strObj); // {n: "m"}
 //----------------------------------------------------
         /*
         判断是不是相等，新增：静态方法：Object.is()
@@ -39,8 +72,12 @@
 //------------------------------------------------------
         /*
         对象的合并
-        新增：静态方法： Object.assign(目标对象，源对象，源对象...),将源对象合并到目标对象中，目标对象被修改
-        后面的源对象会把目标对象中相同的属性覆盖     
+        1、新增：静态方法： Object.assign(目标对象，源对象，源对象...),将源对象所有可枚举属性复制到目标对象中，目标对象被修改.
+        2、后面的源对象会把目标对象中同名的属性覆盖 
+        3、如果只有一个参数，会直接返回改参数；如果该参数不是对象，则会转成独享返回；如果该参数是undefined和null，会报错，因为它们无法转成对象
+        4、其他类型的数值（数值、字符串和布尔值）不再首参数位置，不会报错，但是除了字符串和数值会以数组形式考入目标对象，其他值不会产生效果
+        5、拷贝是有限制的，只拷贝源对象的自身属性，不拷贝继承属性，也不拷贝不可枚举属性
+        6、拷贝是浅拷贝。也就是说，如果源对象的某个属性的值是对象，那么目标对象拷贝得到的是这个对象的引用。
         */
         function move(obj){
             var defaultObj = {
@@ -54,7 +91,7 @@
             ease: 'easeIn',
             duration: 2000,
         }); // {ease: "linear", duration: 1000} 目标对象被修改
-//------------------------------------------------------------
+        //---------------------------------
         function move1(obj){
             var defaultObj = {
                 ease: 'linear',
@@ -68,6 +105,136 @@
             ease: 'easeIn',
             duration: 2000,
         }); 
+        //------------------------------------
+        var v1 = 'abc';
+        var v2 = true;
+        var v3 = 10;
+        var obj = Object.assign({}, v1, v2, v3);
+        console.log(obj); // {0: "a", 1: "b", 2: "c"}
+        //------------------------------------
+        var source = Object.defineProperty({}, 'invisible', {
+            enumberable: false,
+            value: 'hello',
+        });
+        console.log(source);// {invisible: "hello"}
+        var obj = Object.assign({}, {b: 'c'},
+            Object.defineProperty({}, 'invisible', {
+                enumberable: false,
+                value: 'hello',
+            })
+        );
+        console.log(obj); // {b: "c"}
+        //--------------------------------------
+        var obj1 = {
+            a: {b:2},
+        }
+        var obj2 = Object.assign({}, obj1);
+        obj1.a.b = 3;
+        obj1.a = 100;
+        console.log(obj1.a); // 100
+        console.log(obj2.a); // {b: 3}
+        console.log(obj2.a.b); // 3 obj1中属性的改变会影响obj2中属性的改变
+//--------------------------------------------------------------
+        /*
+        方法的name属性
+        1、函数的name属性返回函数名，对象方法也是函数，也有name属性
+        2、如果对象的方法使用了取值函数（getter）和存值函数（setter），则name属性不是在该方法上面，而是该方法的属性描述对象的get和set属性上面，返回值是方法名前加上get和set
+        3、bind方法创造的函数，name属性返回bound加上原函数的名字
+        4、Function构造函数创造的函数，name属性返回的anonymous
+        5、如果对象的方法是一个Symbol值，那么name属性返回的是这个Symbol值的描述符
+        */
+        var obj = {
+            x: 1,
+            get foo(){return this.x},
+            set foo(x){this.x = x;}
+        }
+        console.log(obj.foo.name); // undefined
+        console.log(obj);
+        var descriptor = Object.getOwnPropertyDescriptor(obj, 'foo');
+        console.log(descriptor); // {get: ƒ, set: ƒ, enumerable: true, configurable: true}
+        console.log(descriptor.get.name); // get foo
+        console.log(descriptor.set.name); // set foo
+        //---------------------
+        console.log((new Function()).name); // anonymous
+        var someFun = function(){console.log(111)};
+        console.log(someFun.bind().name); // bound someFun
+        console.log(someFun.bind()); // ƒ (){console.log(111)}
+        //----------------------------
+        var key1 = Symbol('aa');
+        var key2 = Symbol();
+        var obj = {
+            [key1](){},
+            [key2](){}
+        };
+        console.log(obj[key1].name); // [aa]
+        console.log(obj[key2].name); // 
+//-------------------------------------------------------------------------------
+        /*
+        可枚举属性：
+        1、对象的每一个属性都有一个描述对象（descriptor），用来控制该属性的行为，Object.getOwnPropertyDescriptor方法可以获取该属性的描述对象。描述对象的enumerable属性成为可枚举性，如果该属性为false，表示某些操作会忽略当前属性
+        2、目前有4个操作会忽略enumerable为false的属性：
+            for...in循环：只遍历对象自身的和继承的可枚举属性
+            Object.keys()：返回对象自身的所有可枚举属性的键名
+            JSON.stringify()：只串行化对象自身的可枚举属性
+            Object.assign()：只拷贝对象自身的可枚举属性
+        3、ES6 规定，所有 Class 的原型的方法都是不可枚举的。
+        */
+        var isEnumerable = Object.getOwnPropertyDescriptor(class{foo(){}}.prototype, 'foo').enumerable;
+        console.log(isEnumerable); // false
+        //-----------------------------------------
+        /*
+        属性的遍历：
+        1、for...in：遍历对象自身的和继承的可枚举属性（不包含Symbol属性）
+        2、Object.keys(obj)：返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含Symbol属性）
+        3、Object.getOwmPropertyNames(obj)：返回一个数组，包括对象自身的所有属性（不含Symbol属性，但是包括不可枚举属性）的键名
+        4、Object.getOwnPropertySymbols(obj)：返回一个数组，包含对象自身的所有Symbol属性的键名
+        5、Reflect.ownKeys(obj)：返回一个数组，包含对象自身的所有键名，不管键名是Symbol还是字符串，也不管是不是可枚举
+        */
+//-----------------------------------------------------------------------------------------------------
+        /*
+        Object.getOwnPropertyDescriptor()：主要是为了解决Object.assign()无法正确拷贝get属性和set属性的问题
+        */
+        var source = {
+            set foo(val){
+                console.log(val);
+            }
+        };
+        var target = {};
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        var targetDesc = Object.getOwnPropertyDescriptor(target, 'foo');
+        console.log(targetDesc); // {get: undefined, set: ƒ, enumerable: true, configurable: true}
+        var showMerge = (source, target) => Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); // 将对象合并写成一个函数形式
+        console.log(Object.getOwnPropertyDescriptor(showMerge(source, target), 'foo'));// {get: undefined, set: ƒ, enumerable: true, configurable: true}
+
+//-------------------------------------------------------------------------------------------
+        /*
+        super关键字：指向当前对象的原型对象
+        super关键字表示原型对象时，只能用在对象的方法之中，用在其他地方会报错。目前，只有对象方法的简写法可以让 JavaScript 引擎确认，定义的是对象的方法。
+        */
+        const person = {
+            name: 'wuyapingzi',
+        };
+        const student = {
+            name: 'zhangsan',
+            say(){
+                console.log('I can say my prototype name:', super.name);
+            }
+        };
+        Object.setPrototypeOf(student, person);
+        student.say(); // I can say my prototype name: wuyapingzi
+        
+        //-----------------------
+        var obj = {
+            foo: super.foo //报错，super用在对象的属性中了。
+        }
+        var obj = {
+            foo: () => super.name // 报错，super用在一个函数里面，然后赋值给foo属性
+        }
+        var obj = {
+            foo: function(){
+                return super.name; // 报错，super用在一个函数里面，然后赋值给foo属性
+            }
+        }
     </script>
 </body>
 </html>
