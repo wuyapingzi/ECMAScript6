@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+    箭头函数返回对象需要用小括号()括起来, 如果没有用小括号括起来，返回的冒号前面的是该语句的标识符。
+    */
+    var add = (a,b) => ({sum: a+b});
+    console.log(add(2,5)); // {sum: 7}
+    //-------------------------------
+    var add = a => {
+      sum: for(var i = 0; i< a; i++){
+        if(i > a/2){
+          break sum; // 跳出循环，此时sum标识符代表该循环
+        }
+        console.log(i);// 0 1 2 3
+      }
+    }
+    add(6);
+
+//----------------------------------------------------------------------
+    /*
+      1、箭头函数的this指向创建该函数的时候的对象
+      2、箭头函数没有arguments函数，如果还是要获取参数，就用剩余参数...rest进行模拟
+      3、箭头函数不能用new调用
+    */
+    var fun = () => {
+      console.log(this); // Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, frames: Window, …}
+    }
+    fun();
+    // document.onclick = fun; // Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, frames: Window, …}
+    fun.bind({a:1})(); // Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, frames: Window, …} 并没有修改fun函数的this
+    //---------------------------------------------
+    var fun1 = function (){
+      console.log(this);
+    }
+    fun1(); // Window
+    // document.onclick = fun1; // #document
+    fun1.bind({a:1})(); //{a: 1}
+    //---------------------------------------
+    var fun2 = (...rest) => console.log(rest);
+    fun2(1,2,3,4); // (4) [1, 2, 3, 4]
+//------------------------------------------------------------------------------------
+    /*
+    1、双冒号运算符:: ，冒号左边是一个对象，右边是一个函数，该运算符会自动将左边的对象，作为上下文环境（this对象），绑定到右边的函数上去。
+    如果双冒号运算符的结果还是一个对象，就可以采用链式写法。
+    2、尾调用优化是函数式编程的概念，是指某个函数最后一步调用另一个函数。
+    函数调用会在内存形成一个“调用记录”，又成为“调用帧”，保存调用位置和内部变量等信息。如果在函数A内部调用函数B，那么在A的调用帧上方，会形成一个B的调用帧。等B运行结束，将结果返回到A，B的调用帧才会消失。如果B的函数内部还调用函数C，那么就该有一个C的调用帧，以此类推，所有的调用帧就会形成一个“调用栈”。
+    尾调用由于是函数的最后一步操作，所以不用保留外层函数的调用帧，因为调用位置和内部变量不会再用到，只要直接用内层函数的调用帧取代外层函数的调用帧就可以。
+    3、尾递归：递归非常耗费内存，因为需要同时保存成千上百个调用帧，很容易出现“栈溢出”错误。但是。对于尾递归（尾调用自身）来说，由于只存在一个调用帧，所以不会出现“栈溢出”错误。
+    */
+    //n的阶乘 常规递归 复杂度O(n)
+    function factorial(n){
+      if(n===1){
+        return 1;
+      }
+      return n * factorial(n-1);
+    }
+    //n的阶乘 尾递归 复杂度O(1)
+    function factorial2(n, total){
+      if(n === 1) {return total};
+      return factorial2(n-1, n*total);
+    }
+    //计算Fabonacci数列 常规递归
+    function fibonacci(n){
+      if(n<=1) {return 1};
+      return fibonacci(n-1) + fibonacci(n-2);
+    }
+    //计算fibonacci数列 尾递归
+    function fibonacci2(n, ac1=1, ac2=1){
+      if(n===1){return ac2;}
+      return fibonacci2(n-1, ac2, ac1 + ac2);
+    }
+    console.log(fibonacci2(6,1,1));
+
+
+  </script>
+</body>
+</html>
