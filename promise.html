@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    var p = new Promise(() => {
+      console.log('实例化。。。'); //在函数加载的时候就直接执行
+    });
+    console.log(p); // Promise 此时的[[PromiseStatus]]: "pending"
+
+    var p1 = new Promise((resolve, reject) => {
+      console.log('实例化。。。。');
+      resolve(); // 改变Promise状态
+      reject(); // Promise 状态不会再次被修改
+    });
+    console.log(p1); // Promise 此时的[[PromiseStatus]]: "resolved"
+
+    var p2 = new Promise((resolve, reject) => {
+      console.log(111);
+      resolve();
+      console.log(2222);
+    });
+    // 111
+    // 2222 说明Promise执行的resolve()之后，并不会结束，还是会继续执行。所以如果要结束该Promise，需要return resolve();
+    //--------------------------------------
+    var p3 = new Promise((resolve, reject) => {
+      console.log('实例化。。。'); //在函数加载的时候就直接执行
+      resolve('成功'); // resolve函数可以带参数传递到外部
+    });
+    console.log(p3); // Promise {<resolved>: "成功"} [[PromiseStatus]]: "resolved"  [[PromiseValue]]: "成功" 
+    // resolve向外部传递的参数通过 实例的then方法的回调函数中的参数data接收
+    p3.then((data) => {
+      console.log('实例的then：', data);
+    });
+    //实例的then： 成功
+
+//------------------------------------------------------------------------------------------------------
+    console.log(1);
+    //setTimeout是将任务推到任务队列里面去
+    setTimeout(() => {
+      console.log(3);
+    });
+
+    setTimeout(() => {
+      console.log(4);
+    });
+
+    var pp = new Promise((resolve, reject) => {
+      console.log(5);
+      resolve();
+    });
+    //实例then方法成功的回调函数属于微任务，是在所有宏任务执行结束之后再执行的
+    pp.then(() => {
+      console.log(6);
+    });
+
+    console.log(2);
+    //输出：1 5 2 6 3 4
+    // 宏任务和微任务执行完成之后，才会继续执行任务队列里的其他任务
+
+//--------------------------------------------------------------------
+    var p = new Promise((resolve, reject) => {
+      return resolve('成功');
+    });
+    var p2 = p.then(()=>{return 111});
+    console.log(p2);
+    p2.then((data) => {
+      console.log(data);
+    });
+    // 111 
+    // 说明，实例p的then方法的成功的回调函数return的值，会被实例p2的then方法成功的回调函数的参数接收。p2的PromiseValue取决于实例p的then方法的成功的回调函数return的值
+    //-------------------------
+    var p3 = p.then(() => {
+      return new Promise((resolve, reject) => {resolve('成功了');}); // PromiseStatus : resolved
+    });
+    console.log(p3); // [[PromiseStatus]]:"resolved"
+    // p3的状态取决于p实例then方法内部return的Promise实例的状态。
+    p3.then((data) => {
+      console.log('p3 then:', data); // p3 then: 成功了
+    })
+    //-==----------------------------------
+    var p4 = p.then(() => {
+      return new Promise((resolve, reject) => {reject('失败了');}); // PromiseStatus : resolved
+    });
+    console.log(p4); // [[PromiseStatus]]:"rejected"  [[PromiseValue]]:"失败了"
+    // p4的状态取决于p实例then方法内部return的Promise实例的状态。
+    p4.catch((data) => {
+      console.log('p4 then:', data); //p4 then: 失败了
+    })
+  </script>
+</body>
+</html>

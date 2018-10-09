@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #box{
+      width: 100px;
+      height: 100px;
+      background-color: #ff0000;
+      position: absolute;
+      left: 0;
+      top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id='box'>
+
+  </div>
+  <script>
+    // function move(obj, attr, target, duration, callback){
+    //   var b = parseInt(getComputedStyle(obj)[attr]);
+    //   var c = target - b;
+    //   var d = duration;
+    //   var temp = new Date().getTime();
+    //   var timer = setInterval(function(){
+    //     var t = new Date().getTime() - temp;
+    //     if(t > d){
+    //       clearInterval(timer);
+    //       t = d;
+    //     }
+    //     var v = c/d*t+b;
+    //     obj.style[attr] = v+'px';
+    //     if(t===d){
+    //       typeof callback === 'function' && callback();
+    //     }
+    //   }, 200);
+
+    // }
+    // var box = document.getElementById('box');
+    // move(box, 'width', 200, 500, () => {
+    //   move(box, 'height', 300, 500, () => {
+    //     move(box, 'left', 500, 500);
+    //   });
+    // })
+
+    /*
+      改写promise
+    */
+    function movePromise(obj, attr, target, duration){
+      return new Promise((res, rej) => {
+        // getComputedStyle(obj)[attr]  获取当前对象的样式值
+        var b = parseInt(getComputedStyle(obj)[attr]);// 获取当前对象的样式值并转成int类型
+        var c = target - b;
+        var d = duration;
+        var temp = new Date().getTime();
+        var timer = setInterval(function(){
+          var t = new Date().getTime() - temp;
+          if(t > d){
+            clearInterval(timer);
+            t = d;
+          }
+          var v = c/d*t+b; // 计算没移动一步的距离
+          obj.style[attr] = v+'px';
+          if(t===d){
+            res();
+          }
+        }, 200);
+      })
+
+    }
+
+    var box = document.getElementById('box');
+    movePromise(box, 'width', 300, 500)
+      .then(() => {
+        movePromise(box, 'height', 300, 500);
+      })
+      .then(()=> {
+        movePromise(box, 'left', 200, 500);
+      })
+      .then(() => {
+        movePromise(box, 'top', 300, 500);
+      })
+  </script>
+</body>
+</html>

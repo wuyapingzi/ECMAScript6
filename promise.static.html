@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+    Promise 静态方法
+
+    */
+    // var p = new Promise((resolve, reject) => {
+    //   resolve();
+    // })
+    // p
+    //   .then(() => {console.log(1)})
+    //   .then(() => {return new Promise((resolve, reject) => {resolve(200);})}) 
+    //   // .then(() => {return Promise.resolve(400);})
+    //   .then(() => {return Promise.reject('失败了、、、');})
+    //   .then((data) => {console.log(data)})
+    //   .catch((err) => {console.log(err)}) // 失败了、、、
+    // 1 2
+    //then方法函数内部的return一个新的Promise实例 ：new Promise((resolve, reject) => {resolve();}) 等价于 使用静态方法调用 Promise.resolve();同样可以接收一个参数传递到外部，下一个then方法的回调函数中的参数data可以接收
+
+    //-------------------------------------
+    var p1 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('a')
+      }, 1000)
+    })
+    var p2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('b')
+      }, 1500)
+    })
+    var p3 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('c')
+      }, 500)
+    })
+    var p = Promise.all([p1, p2, p3]);
+    console.log(p);
+    // [[PromiseStatus]]:"resolved"
+    // [[PromiseValue]]:Array(3)
+    //   0:"a"
+    //   1:"b"
+    //   2:"c"
+    var raceP = Promise.race([p1, p2, p3]);
+    console.log(raceP);
+    // [[PromiseStatus]]:"resolved"
+    // [[PromiseValue]]:"c"
+    p.then((data) => {console.log(data);}) // (3) ["a", "b", "c"]
+  </script>
+</body>
+</html>
