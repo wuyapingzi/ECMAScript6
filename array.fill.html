@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+    fill() 方法用一个固定值填充一个数组中从起始索引到终止索引内的全部元素。不包括终止索引
+    语法： arr.fill(value[, start[, end]])
+    参数：
+      value：用来填充数组元素的值。
+      start：起始索引，默认为0。
+      end：终止索引， 默认为arr.length。
+    返回值：修改后的数组。
+    */
+    console.log([1,2,3].fill(4)); // [4,4,4]
+    console.log([1,2,3].fill(4, 1)); //[1,4,4]
+    console.log([1,2,3].fill(4, 1, 2)); //[1,4,3]
+    console.log([1,2,3].fill(4, 1, 1)); // [1,2,3]
+    console.log([1,2,3].fill(4, -3, -2)); // [4,2,3]
+    console.log([1,2,3].fill(4, NaN, NaN)); // [1,2,3]
+    console.log([1,2,3].fill(4, 3, 5)); // [1,2,3]
+    console.log(Array(3).fill(4)); // [4,4,4]
+
+    // fill方法不要求this对象是数组，this对象可改
+    //{length: 4}是长度为4的类数组对象
+    console.log([].fill.call({length: 4}, 4));// {0: 4, 1: 4, 2: 4, 3: 4, length: 4}
+  </script>
+</body>
+</html>
