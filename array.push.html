@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      push() 方法将一个或多个元素添加到数组的末尾，并返回该数组的新长度
+      语法：arr.push(element1, ..., elementN)
+      参数：
+        elementN：被添加到数组末尾的元素
+      返回值：新的length属性值
+      该方法和 call() 或 apply() 一起使用时，可应用在类似数组的对象上。push 方法根据 length 属性来决定从哪里开始插入给定的值。如果 length 不能被转成一个数值，则插入的元素索引为 0，包括 length 不存在时。当 length 不存在时，将会创建它。
+    */
+
+    //添加元素到数组
+    var arr = [1,2,3];
+    console.log('初始数组==', arr); //[1, 2, 3]
+    var newLen = arr.push(4,5);
+    console.log('新数组==', arr); //[1, 2, 3, 4, 5]
+    console.log('新length属性值==', newLen); // 5
+
+    // 合并两个数组，使用apply添加第二个数组的所有元素，当第二个数组太大时不能使用apply方法合并数组，因为一个函数能够接受的参数个数是有限制的。
+    //不能用call。利用apply方法的第二个参数是数组
+    var arr1 = [1,2,3];
+    var arr2 = [4,5,6];
+    Array.prototype.push.apply(arr1, arr2);//将arr2合并到arr1上
+    console.log('合并后的arr1==', arr1); // [1, 2, 3, 4, 5, 6]
+
+    //像数组一样使用对象
+    var obj = {
+      length: 0,
+      addElem(elem){
+        [].push.call(this, elem);
+      },
+      addElems(elems){
+        [].push.apply(this, elems);
+      }
+    }
+    obj.addElem(1);
+    obj.addElems(['a', 'b', 'c']);
+    console.log('添加元素后的类数组对象==', obj); // {0: 1, 1: "a", 2: "b", 3: "c", length: 4, addElem: ƒ, addElems: ƒ}
+    console.log('添加元素后的length == ', obj.length); // 4
+  </script>
+</body>
+</html>
