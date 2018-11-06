@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      shift() 方法从数组中删除第一个元素，并返回该元素的值。此方法更改数组的长度。
+      语法：arr.shift()
+      返回值：从数组中删除的元素，如果数组为空，则返回undefined
+      该方法移除索引为0的元素，并返回被移除的元素，其他元素的索引值随之减1.如果length的属性值为0，则返回undefined。
+      shift方法并不局限于数组：这个方法通过call或apply方法作用于类数组对象上，但是对于没有length属性的对象，调用该方法没有任何意义。
+    */
+
+    var arr = [1,2,3,4];
+    console.log('初始数组==', arr); //  [1, 2, 3, 4]
+    var shifted = arr.shift();
+    console.log('调用shift删除后的数组==', arr); //[2, 3, 4]
+    console.log('被删除的元素==', shifted); //1
+
+    //shift方法可改变this
+    var arrLike = {
+      length: 4,
+      0: 1,
+      2: 3,
+    }
+    console.log('初始的类数组==', arrLike); // {0: 1, 2: 3, length: 4}
+    var arrShifted = [].shift.call(arrLike);
+    console.log('调用shift删除后的类数组==', arrLike); // {1: 3, length: 3}
+    console.log('被删除的类数组元素==', arrShifted); // 1
+  </script>
+</body>
+</html>
