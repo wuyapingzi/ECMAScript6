@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      reverse() 方法将数组中元素的位置颠倒。
+      语法：arr.reverse()
+      返回值：返回该数组的引用
+    */
+
+    var arr = [1,2,3];
+    console.log('初始数组==', arr); // [1, 2, 3]
+    var arrAddr = arr.reverse();
+    console.log('调用reverse之后的数组==', arr); // [3, 2, 1]
+    console.log('reverse返回数组的引用==', arrAddr); //  [3, 2, 1] 该数组的引用输出的也是 该数组
+  </script>
+</body>
+</html>
