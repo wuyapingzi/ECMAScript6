@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      sort方法用原地算法进行排序，并返回数组，排序不一定是稳定的，默认的排序顺序是根据字符串Unicode码点。
+      语法：arr.sort([compareFunction])
+      参数：
+        compareFunction：可选，用来指定按某种顺序排序的函数。
+      返回值：排序后的数组，数组已原地排序，并且不进行复制。
+      如果指明了compareFunction，那么数组会按照调用该函数的返回值排序。即a和b是两个被比较的元素：
+        如果compareFunction(a,b)小于0，那么a排在b之前。
+        如果compareFunction(a, b)等于0，a和b的相对位置不变。
+        如果compareFunction(a,b)大于0，b会被排在a之前。
+    */
+    //排序内容为数字
+    var arr = [4,5,1,3,2];
+    console.log('排序前的数组==', arr); //[4, 5, 1, 3, 2]
+    arr.sort((a, b)=>{
+      return a - b; // （升序）如果被比较的是数字而非字符串可以这样写
+    });
+    console.log('排序后的数组==', arr); //[1, 2, 3, 4, 5]
+
+    //排序元素为字符串
+    var strArr = ['one', 'two', 'three', 'four'];
+    console.log('排序前的数组==', strArr); // ["one", "two", "three", "four"]
+    strArr.sort((a, b)=>{
+      if(a<b){
+        return -1;
+      }else if(a>b){
+        return 1;
+      } 
+      return 0;
+    });
+    console.log('排序后的数组==', strArr); //["four", "one", "three", "two"]
+
+    //对象按照某个属性排序
+    var items = [
+      { name: 'Edward', value: 21 },
+      { name: 'Sharpe', value: 37 },
+      { name: 'And', value: 45 },
+      { name: 'The', value: -12 },
+      { name: 'Magnetic' },
+      { name: 'Zeros', value: 37 }
+    ];
+    //按照value排序
+    items.sort((a,b)=>{
+      return (a.value - b.value);
+    })
+    items.map((item)=>{
+      /*
+        按照value排序后的items== The -12
+        按照value排序后的items== Edward 21
+        按照value排序后的items== Sharpe 37
+        按照value排序后的items== And 45
+        按照value排序后的items== Magnetic undefined
+        按照value排序后的items== Zeros 37
+      */
+      console.log('按照value排序后的items==', item.name, item.value); 
+      //因为 undefined-37 ==>  NaN ，所以位置不变
+    })
+    
+
+    //按照name排序，忽略大小写
+    items.sort((a,b)=>{
+      var nameA = a.name.toUpperCase();
+      var nameB = b.name.toUpperCase();
+      if(nameA < nameB){
+        return -1;
+      }else if(nameA > nameB){
+        return 1;
+      }
+      return 0;
+    });
+    items.map((item)=>{
+      /*
+        按照name排序后的items== And 45
+        按照name排序后的items== Edward 21
+        按照name排序后的items== Magnetic undefined
+        按照name排序后的items== Sharpe 37
+        按照name排序后的items== The -12
+        按照name排序后的items== Zeros 37
+      */
+      console.log('按照name排序后的items==', item.name, item.value);
+    });
+
+
+
+    var list = ['Delta', 'alpha', 'CHARLIE', 'bravo', 'bravo'];
+
+    // 对需要排序的数字和位置的临时存储
+    var mapped = list.map(function(el, i) {
+      //将数组映射成对象
+      return { index: i, value: el.toLowerCase() };
+    });
+
+    // 按照多个值排序数组
+    mapped.sort(function(a, b) {
+      // + 号将布尔值转成数字。+true ==> 1  +false ==> 0
+      // 0||1 ==>1  0||-1 ==> -1
+      console.log(+(a.value > b.value) || +(a.value === b.value) - 1);
+      return +(a.value > b.value) || +(a.value === b.value) - 1;
+    });
+    console.log('排序之后的mapped', mapped);
+    // 根据索引得到排序的结果
+    var result = mapped.map(function(el){
+      console.log('el.index==', el.index, list[el.index]);
+      return list[el.index];
+    });
+    console.log('list排序结果==', result); // ["alpha", "bravo", "CHARLIE", "Delta"]
+  </script>
+</body>
+</html>
