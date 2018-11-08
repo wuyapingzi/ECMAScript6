@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      Object.definePproperty() 添加新属性或者修改原有属性
+      语法：Object.defineProperty(obj, prop, descriptor)
+      参数说明：
+        obj：目标对象
+        prop：需要定义或者修改的属性名称
+        descriptor：目标属性所拥有的特性
+      返回值：传入函数的对象，即第一个参数obj
+      给对象属性添加特征描述的两种形式：数据描述和存取器描述
+      数据描述：
+        value：属性对应的值，可以使任意类型的值，默认是undefined。
+        writable：属性的值是否可以被重写。true==>可以被重写  false==>不能被重写。默认是false
+        enumerable：此属性是否可以被枚举（使用for...in或者Object.keys()遍历）true==>可以被枚举  false==>不能被枚举。默认是false。
+        configurable：是否可以删除目标属性或者可以再次修改属性的特性（writable，enumerable，configurable）。true==>可以被删除或者重新设置特性  false==>不可以。默认是false。
+      存取器描述：
+        存取器属性不包含数据值，它们是一对getter 和setter函数。这两个函数都不是必须的。
+        在读取存取器属性时，会调用getter函数，这个函数负责返回有效的值。在写入访问器属性时，会调用setter函数并传入新值，这个函数负责如何处理数据。
+        configurable：表示能否通过delete 删除属性从而重新定义属性，能否修改属性的特性，或者能否把属性修改为数据属性。对于直接在对象上定义的属性，这个特性的默认值为true。
+        enumerable：表示能否通过for-in 循环返回属性。对于直接在对象上定义的属性，这个特性的默认值为true。
+        get：在读取属性时调用的函数。默认值为undefined
+        set：在写入属性时调用的函数。默认值为undefined
+      提示：一旦使用Object.defineProperty给对象添加属性，那么如果不设置属性的特性，那么configurable、enumerable、writable这些值都为默认的false
+    */
+
+    var obj = {};
+    Object.defineProperty(obj, 'name', {
+      value: 'wuyapingzi',
+      writable: false,
+      configurable: false,
+      enumerable: false,
+    });
+    console.log('使用defineProperty定义的name属性==', obj.name); //wuyapingzi
+    //修改name属性
+    obj.name='pingping';
+    console.log('修改name值为pingping之后==', obj.name) // wuyapingzi name属性值没有被修改
+    
+    //遍历
+    for(var attr in obj){
+      console.log('使用for...in遍历obj：',attr);  ///该循环没有执行
+    }
+    //重新设置属性的特性：
+    // Object.defineProperty(obj, 'name', {
+    //   configurable: true  // 报错  Uncaught TypeError: Cannot redefine property: name
+    // });
+
+    var obj1 = {};
+    Object.defineProperty(obj1, 'name', {
+      value: 'wuyapingzi',
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
+    //修改name属性
+    obj1.name='pingping';
+    console.log('修改name值为pingping之后==', obj1.name) //修改name值为pingping之后== pingping
+    
+    //遍历
+    for(var attr in obj1){
+      console.log('使用for...in遍历obj：',attr, obj1[attr]);  ///使用for...in遍历obj： name pingping
+    }
+    //重新设置属性的特性：
+    Object.defineProperty(obj1, 'name', {
+      configurable: false  // 将configurable属性设置为false
+    });
+    console.log(Object.getOwnPropertyDescriptor(obj1, 'name')); //{value: "pingping", writable: true, enumerable: true, configurable: false}
+
+    //================================存取器属性=========================================
+    var o = {a:0}//直接在对象上定义的属性，其描述符属性默认值为true
+    Object.defineProperty(o, "b", {
+        set: function (val) {
+          this.a = val + 2
+        },
+        get: function () {
+            return this.a + 1;
+        },
+    });
+    console.log('obj.a==', o.a); //obj.a== 0
+    console.log('obj.b==', o.b); //obj.b== 1
+    o.b = 3;
+    console.log('obj.a==', o.a); //obj.a== 5
+    console.log('obj.b==', o.b); //obj.b== 6
+    console.log('o.a的属性描述对象==',Object.getOwnPropertyDescriptor(o, 'a')); //{value: 5, writable: true, enumerable: true, configurable: true}
+    console.log('o.b的属性描述对象==',Object.getOwnPropertyDescriptor(o, 'b')); //{get: ƒ, set: ƒ, enumerable: false, configurable: false}
+
+    //但是如果定义了set或者get方法中的任何一个，就不能再设置writable，即便false也不可以 .
+    //报错Uncaught TypeError: Invalid property descriptor. Cannot both specify accessors and a value or writable attribute,
+    var o = {a:0}
+    Object.defineProperty(o, "b", {
+        set: function (val) {
+          this.a = val + 2
+        },
+        get: function () {
+            return this.a + 1;
+        },
+        writable: true,
+        configurable: true,
+        enumerable: true
+    });
+  </script>
+</body>
+</html>
