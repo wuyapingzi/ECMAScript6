@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      concat() 方法用于合并两个或多个数组。此方法不会更改现有数组，而是返回一个新数组。
+      语法：var new_array = old_array.concat(value1[, value2[, ...]])
+      参数：
+        valueN：将数组和/或值连接成新数组。
+      该方法不会改变this或者任何作为参数提供的数组，而是返回一个浅拷贝，它包含与原始数组相结合的相同元素的副本，原始数组的元素将复制到新数组中。
+    */
+    var arr1 = [1,2,3,4];
+    var arr2 = ['a', 'b', 'c'];
+    var arr = arr1.concat('++',arr2);
+    console.log('合并后生成的新数组==',arr); // [1, 2, 3, 4, "++", "a", "b", "c"]
+    var arr3 = arr.concat([['hello']]);
+    console.log('合并一个二维数组==',arr3); // [1, 2, 3, 4, "++", "a", "b", "c", ["hello"]]
+  </script>
+</body>
+</html>
