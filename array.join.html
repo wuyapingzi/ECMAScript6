@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=\], initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      join() 方法将一个数组（或一个类数组对象）的所有元素连接成一个字符串并返回这个字符串。该方法不会改变数组。
+      语法：
+        str = arr.join();默认分隔符为“ , ”
+        str = arr.join(''); 分隔符===空字符串''
+        str = arr.join(separator);
+      参数：
+        separator：指定一个字符串来分割数组的每个元素。
+      返回值：一个所有数组链接的字符串，如果arr.length为0，则返回空字符串。
+    */
+
+    //拼接数组中的元素
+    var arr = [1,2,3,4];
+    var str = arr.join();//默认分割符为“ , ”
+    console.log('分隔符为“ , ” ==', str); // 分隔符为“ , ” == 1,2,3,4
+    var str1 = arr.join('+');
+    console.log('分隔符为“+”==', str1); // 分隔符为“+”== 1+2+3+4
+
+    //拼接类数组对象中的元素
+    function list(){
+      var s = [].join.call(arguments);
+      console.log('拼接类数组中的元素==', s);
+    }
+    list(1,'a',4,'b'); // 拼接类数组中的元素== 1,a,4,b
+
+  </script>
+</body>
+</html>
