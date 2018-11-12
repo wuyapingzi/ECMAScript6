@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*
+      slice() 方法返回一个新的数组对象，这一对象是一个由 begin和 end（不包括end）决定的原数组的浅拷贝。原始数组不会被改变。
+      语法：
+        arr.slice()
+        arr.slice(begin)
+        arr.slice(begin, end)
+      参数：
+        begin(可选)：从该索引处开始提取数组中的元素，如果改参数为负数，则表示从原数组中的倒数第几个元素开始提取，如果省略，则slice从索引0处开始。
+        end(可选)：在该索引处结束提取元素数组，slice或提取原数组中索引从begin到end的所有元素（包含begin，但不包含end）如果为负数，则表示在原数组中倒数第几个结束抽取。如果忽略或者end大于原数组长度，则一直提取到原数组末尾。
+      返回值：一个含有提取元素的新数组
+    */
+
+    var arr = [1,2,3,4];
+    console.log('原始数组==', arr); //[1, 2, 3, 4]
+    var newArr = arr.slice(0,3);
+    console.log('新数组是==', newArr); //[1, 2, 3]
+
+    //浅拷贝
+    var myHonda = {color: 'red', wheels: 4, engine: {cylinders: 4, size: 2.2}};
+    var myCar = [myHonda, 2, 'cherry condition', 'purchase 1997'];
+    var newCar = myCar.slice(0,2);
+    console.log('myCar==', JSON.stringify(myCar)); // [{"color":"red","wheels":4,"engine":{"cylinders":4,"size":2.2}},2,"cherry condition","purchase 1997"]
+    console.log('newCar==', JSON.stringify(newCar)); // [{"color":"red","wheels":4,"engine":{"cylinders":4,"size":2.2}},2]
+    console.log('my car color ==', myCar[0].color); //my car color == red
+    console.log('new car color ==', newCar[0].color); //my car color == red
+    //修改myHonda的color颜色属性
+    myHonda.color = 'yellow';
+    console.log('修改之后my car color ==', myCar[0].color); //修改之后my car color == yellow
+    console.log('修改之后new car color ==', newCar[0].color); //修改之后new car color == yellow
+
+    //slice 方法可以用来将一个类数组（Array-like）对象/集合转换成一个新数组。只需要将该方法绑定到这个对象上。
+    function list(){
+      return Array.prototype.slice.call(arguments);
+    }
+    var list1 = list(1,2,3);
+    console.log('将函数参数转成数组==', list1); //将函数参数转成数组== [1, 2, 3]
+    
+  </script>
+</body>
+</html>
